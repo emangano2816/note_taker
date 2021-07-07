@@ -25,13 +25,22 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/public/index.html
 //Route for notes.html
 app.get(`/notes`, (req, res) => res.sendFile(path.join(__dirname,'/public/notes.html')));
 
-//Route for GET api/notes
+//Route for GET /api/notes
 app.get('/api/notes', (req, res) => {
 
    res.json(notes);
 });
 
-//Route for POST api/notes
+//Route for single note - for display on right side
+// app.get('/api/notes/:title', (req,res) => {
+//     const chosen = req.params.title;
+
+//     console.log(chosen);
+
+// })
+
+
+//Route for POST /api/notes
 app.post('/api/notes', (req, res) => {
     const newnote = req.body;
 
@@ -41,6 +50,23 @@ app.post('/api/notes', (req, res) => {
 
     res.json(newnote);
 })
+
+//Route for DELETE
+// app.delete('/api/notes/:title', (req, res) => {
+//     //look up note title; if doesn't exist return 404
+//     //const deletenote = notes.find(note => note.title === req.params.title);
+
+//      console.log(req.params.title);
+    // if (!deletenote) return res.status(404).send('There was an issue deleting the requested note');
+
+    // //delete the note
+    // const index = notes.indexOf(note);
+    // notes.splice(index,1);
+
+    // //return the deleted note
+    // res.send(note);
+// })
+
 
 
 
