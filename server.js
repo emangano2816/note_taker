@@ -49,33 +49,33 @@ app.get('/api/notes/:id', (req,res) => {
 
 //Route for POST /api/notes
 app.post('/api/notes', (req, res) => {
+    //store information to post, set the ID property
     const newnote = req.body;
-
+    newnote.id = notes.length + 1;
     console.log(newnote);
 
+    //add the object
     notes.push(newnote);
 
+    //return the added note
     res.json(newnote);
 })
 
 //Route for DELETE
-// app.delete('/api/notes/:id', (req, res) => {
-//     //look up note title; if doesn't exist return 404
-//     console.log(req.body);
+app.delete('/api/notes/:id', (req, res) => {
+    //look up note title; if doesn't exist return 404
+    const deletenote = notes.find(note => note.id === parseInt(req.params.id));
 
-//     console.log(JSON.parse({ id }));
-    // const deletenote = notes.find(note => note.title === req.params.title);
+     console.log(req.params.id);
+    if (!deletenote) return res.status(404).send('There was an issue deleting the requested note');
 
-    //  console.log(req.params.title);
-    // if (!deletenote) return res.status(404).send('There was an issue deleting the requested note');
+    //delete the note
+    const index = notes.indexOf(deletenote);
+    notes.splice(index,1);
 
-    // //delete the note
-    // const index = notes.indexOf(note);
-    // notes.splice(index,1);
-
-    // //return the deleted note
-    // res.send(note);
-// })
+    //return the deleted note
+    res.send(deletenote);
+})
 
 
 
