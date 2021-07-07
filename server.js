@@ -1,33 +1,36 @@
-//Importing FS and EXPRESS
+//Loading fs, path, express, bodyParser helper
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
+const notes = require('./db/db.json');
+
+//Create instance of express to serve endpoints
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 
-//To read in CSS file for notes
-app.use(express.static(`${__dirname}/public`));
-app.use(express.json());
+//Middleware Functions
+app.use(express.static(`${__dirname}/public`));     //Setting static folder to read client-side public files
+app.use(express.json());                             //Configure express instance with some body-parser settings
+app.use(express.urlencoded({ extended: true }));     //including handling JSON data
+
+//handle various routes
+//passes  instances of express, app and the node file system, fs into the routes
+// const routes = require('./routes/routes.js')(app, fs);
 
 
 //Route for index.html
-app.get('/', (request, response) => {
-  fs.readFile(`${__dirname}/public/index.html`, (err, data) => {
-    if (err) throw err;
-    response.writeHead(200, {'Content-Type': 'text/html'});
-    response.end(data);
-  });
-});
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/public/index.html')));
 
 //Route for notes.html
-app.get(`/notes`, (request, response) => {
-  fs.readFile(`${__dirname}/public/notes.html`, (err, data) => {
-    if (err) throw err;
-    response.writeHead(200, {'Content-Type': 'text/html'});
-    response.end(data);
-  })
-})
+app.get(`/notes`, (req, res) => res.sendFile(path.join(__dirname,'/public/notes.html')));
+
+//Route for GET api/notes
+app.get('/api/notes', (req, res) => {
+
+   res.json(notes);
+});
 
 
-app.use(express.json());
+
 app.listen(PORT, () => console.log(`Express server currently running on port ${PORT}`));
