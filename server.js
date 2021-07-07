@@ -31,6 +31,17 @@ app.get('/api/notes', (req, res) => {
    res.json(notes);
 });
 
+//Route for POST api/notes
+app.post('/api/notes', (req, res) => {
+    const newnote = req.body;
+
+    console.log(newnote);
+
+    notes.push(newnote);
+
+    res.json(newnote);
+})
+
 
 
 app.listen(PORT, () => console.log(`Express server currently running on port ${PORT}`));
