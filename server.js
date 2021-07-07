@@ -1,7 +1,8 @@
-//Loading fs, path, express, bodyParser helper
+//Loading fs, path, express, uuid, and json file
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
+const uuid = require('uuid');
 const notes = require('./db/db.json');
 
 //Create instance of express to serve endpoints
@@ -10,28 +11,20 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 //Middleware Functions
-app.use(express.static(`${__dirname}/public`));     //Setting static folder to read client-side public files
-app.use(express.json());                             //Configure express instance with some body-parser settings
-app.use(express.urlencoded({ extended: true }));     //including handling JSON data
+app.use(express.static(`${__dirname}/public`));      
+app.use(express.json());                             
+app.use(express.urlencoded({ extended: true }));    
 
-//handle various routes
-//passes  instances of express, app and the node file system, fs into the routes
-// const routes = require('./routes/routes.js')(app, fs);
-
-
-//Route for index.html
+//Route for root (i.e., home page)
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/public/index.html')));
 
-//Route for notes.html
+//Route for notes page
 app.get(`/notes`, (req, res) => res.sendFile(path.join(__dirname,'/public/notes.html')));
 
-//Route for GET /api/notes
-app.get('/api/notes', (req, res) => {
+//Route for GET /api/notes - returns all notes
+app.get('/api/notes', (req, res) => res.json(notes));
 
-   res.json(notes);
-});
-
-// Route for single note - for display on right side
+// Route for GET /api/notes/:id - returns single note by ID
 app.get('/api/notes/:id', (req,res) => {
     const chosen = req.params.id;
 
@@ -46,12 +39,11 @@ app.get('/api/notes/:id', (req,res) => {
     return res.json(false);
 })
 
-
-//Route for POST /api/notes
+//Route for POST /api/notes - takes user input and adds note to notes
 app.post('/api/notes', (req, res) => {
     //store information to post, set the ID property
     const newnote = req.body;
-    newnote.id = notes.length + 1;
+    newnote.id = uuid.v4();
     console.log(newnote);
 
     //add the object
@@ -61,12 +53,14 @@ app.post('/api/notes', (req, res) => {
     res.json(newnote);
 })
 
-//Route for DELETE
+
+
+//Route for DELETE - removes note from notes by ID
 app.delete('/api/notes/:id', (req, res) => {
-    //look up note title; if doesn't exist return 404
+    //look up note to delete; if doesn't exist return 404
     const deletenote = notes.find(note => note.id === parseInt(req.params.id));
 
-     console.log(req.params.id);
+    console.log(req.params.id);
     if (!deletenote) return res.status(404).send('There was an issue deleting the requested note');
 
     //delete the note
