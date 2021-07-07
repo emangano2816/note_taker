@@ -31,13 +31,20 @@ app.get('/api/notes', (req, res) => {
    res.json(notes);
 });
 
-//Route for single note - for display on right side
-// app.get('/api/notes/:title', (req,res) => {
-//     const chosen = req.params.title;
+// Route for single note - for display on right side
+app.get('/api/notes/:id', (req,res) => {
+    const chosen = req.params.id;
 
-//     console.log(chosen);
+    console.log(chosen);
 
-// })
+    for (let i = 0; i < notes.length; i++) {
+        if(chosen === notes[i].title) {
+        return res.json(notes[i]);
+        }
+    }
+
+    return res.json(false);
+})
 
 
 //Route for POST /api/notes
@@ -52,11 +59,14 @@ app.post('/api/notes', (req, res) => {
 })
 
 //Route for DELETE
-// app.delete('/api/notes/:title', (req, res) => {
+// app.delete('/api/notes/:id', (req, res) => {
 //     //look up note title; if doesn't exist return 404
-//     //const deletenote = notes.find(note => note.title === req.params.title);
+//     console.log(req.body);
 
-//      console.log(req.params.title);
+//     console.log(JSON.parse({ id }));
+    // const deletenote = notes.find(note => note.title === req.params.title);
+
+    //  console.log(req.params.title);
     // if (!deletenote) return res.status(404).send('There was an issue deleting the requested note');
 
     // //delete the note
