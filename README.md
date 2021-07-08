@@ -5,8 +5,7 @@
 ## Link(s)
 
 1. [GitHub Repository](https://github.com/emangano2816/note_taker)
-2. [GitHub URL]()
-3. [Live URL]()
+2. [Live URL](https://peaceful-woodland-81855.herokuapp.com/)
 
 
 ## User Story
