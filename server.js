@@ -26,10 +26,11 @@ app.get('/api/notes', (req, res) => res.json(notes));
 
 // Route for GET /api/notes/:id - returns single note by ID
 app.get('/api/notes/:id', (req,res) => {
+    //retrieve and store requested id
     const chosen = req.params.id;
-
     console.log(chosen);
 
+    //search notes and find requested note by id - if id exists return it
     for (let i = 0; i < notes.length; i++) {
         if(chosen === notes[i].title) {
         return res.json(notes[i]);
