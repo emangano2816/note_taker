@@ -60,7 +60,7 @@ app.post('/api/notes', (req, res) => {
 //Route for DELETE - removes note from notes by ID
 app.delete('/api/notes/:id', (req, res) => {
     //look up note to delete; if doesn't exist return 404
-    const deletenote = notes.find(note => note.id === parseInt(req.params.id));
+    const deletenote = notes.find(note => note.id === req.params.id);
 
     console.log(req.params.id);
     if (!deletenote) return res.status(404).send('There was an issue deleting the requested note');
