@@ -65,7 +65,7 @@ You will need node.js as well as the path, express, and uuid packages installed.
 
 ## Application Functionality
 
-[Note Taker Demo]()
+![note_taker.](https://github.com/emangano2816/demo_folder/blob/main/Note_Taker_demo.gif)
 
 ## License
 
