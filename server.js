@@ -13,9 +13,10 @@ app.use(express.static(`${__dirname}/public`));
 app.use(express.json());                             
 app.use(express.urlencoded({ extended: true }));  
 
-app.use('/api/notes', require('./routes/api/notes'))
 app.use('/', require('./routes/pages'));
-  
+app.use('/api/notes', require('./routes/api/notes'))
+
+
 
 //Listen for activity
 app.listen(PORT, () => console.log(`Express server currently running on port ${PORT}`));

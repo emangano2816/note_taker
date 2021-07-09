@@ -1,25 +1,57 @@
+const fs = require('fs');
 const express = require('express');
 const router = express.Router();
-const notes = require('../../db/db.json');
+// const notes = require('../../db/db.json');
+const path = require('path');
 const uuid = require('uuid');
 
 //Route for GET /api/notes - returns all notes
-router.get('/', (req, res) => res.json(notes));
+router.get('/', (req, res) => {
+
+    fs.readFile(path.join(__dirname, '../../db/db.json'), 'utf8', (err, jsonstring) =>{
+        if (err) {
+            console.log("Error reading file:", err);
+            return
+        } 
+        try {
+            const notes = JSON.parse(jsonstring);
+            console.log(notes);
+            res.json(notes);
+        }
+        catch (err) {
+            console.log("Error parsing JSON sting:", err)
+        }
+    })
+});
 
 // Route for GET /api/notes/:id - returns single note by ID
 router.get('/:id', (req,res) => {
     //retrieve and store requested id
-    const chosen = req.params.id;
-    console.log(chosen);
+    const chosenNote = req.params.id;
+    console.log(chosenNote);
 
-    //search notes and find requested note by id - if id exists return it
-    for (let i = 0; i < notes.length; i++) {
-        if(chosen === notes[i].title) {
-        return res.json(notes[i]);
+    //read JSON file
+    fs.readFile(path.join(__dirname, '../../db/db.json'), 'utf8', (err, jsonstring) => {
+        if (err) {
+            console.log("Error reading File:", err);
+            return;
         }
-    }
+        try {
+            const notes = JSON.parse(jsonstring);
+            //search notes and find requested note by id - if id exists return it
+            for (let i = 0; i < notes.length; i++) {
+                if(chosenNote === notes[i].title) {
+                return res.json(notes[i]);
+                }
+            }
+            return res.json(false);
+        }
+        catch (err) {
+            console.log("Error parsing JSON sting:", err)
+        }
+    })
 
-    return res.json(false);
+
 })
 
 //Route for POST /api/notes - takes user input and adds note to notes
