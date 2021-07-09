@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
         } 
         try {
             const notes = JSON.parse(jsonstring);
-            console.log(notes);
+            console.log("Existing notes include:", notes);
             res.json(notes);
         }
         catch (err) {
@@ -29,7 +29,7 @@ router.get('/:id', (req,res) => {
     //retrieve and store requested id
     const chosenNote = req.params.id;
     console.log(chosenNote);
-
+    
     //read JSON file
     fs.readFile(path.join(__dirname, '../../db/db.json'), 'utf8', (err, jsonstring) => {
         if (err) {
@@ -40,18 +40,17 @@ router.get('/:id', (req,res) => {
             const notes = JSON.parse(jsonstring);
             //search notes and find requested note by id - if id exists return it
             for (let i = 0; i < notes.length; i++) {
-                if(chosenNote === notes[i].title) {
+                if (chosenNote === notes[i].id) {
                 return res.json(notes[i]);
+                } else {
+                    return res.json(false);
                 }
-            }
-            return res.json(false);
+            } 
         }
         catch (err) {
-            console.log("Error parsing JSON sting:", err)
+            console.log("Error parsing JSON string:", err)
         }
     })
-
-
 })
 
 //Route for POST /api/notes - takes user input and adds note to notes
@@ -61,11 +60,37 @@ router.post('/', (req, res) => {
     newnote.id = uuid.v4();
     console.log(newnote);
 
-    //add the object
-    notes.push(newnote);
+    //read JSON file
+    fs.readFile(path.join(__dirname, '../../db/db.json'), 'utf8', (err, jsonstring) => {
+        if (err) {
+            console.log("Error reading File:", err);
+            return;
+        }
+        try {
+            //return db.JSON contents as JS object
+            const notes = JSON.parse(jsonstring);
+            
+            //add the object
+            notes.push(newnote);
+            console.log("Saved notes:", notes);
+            //write results to file
+            fs.writeFile(path.join(__dirname, '../../db/db.json'), JSON.stringify(notes), err => {
+                if (err) {
+                    console.log("Error writing file:", err);
+                } else {
+                    console.log("Successfully wrote file")
+                }
+            });
 
-    //return the added note
-    res.json(newnote);
+            //return the added note
+            res.json(notes);
+        }
+        catch (err) {
+            console.log("Error parsing JSON string:", err)
+        }
+    })
+
+
 })
 
 
